@@ -72,8 +72,8 @@ def move_bot(distance, direction): #distance in inches; true for direction = for
         xCord = xCord - distance                                                              #new
         sound.play_tone(1500, 1)
 
-    #print('X CORD: ', xCord, '  ', ' Y CORD: ', yCord) 
-    print("Hello")
+    print('X CORD: ', str(xCord), '  ', ' Y CORD: ', str(yCord)) 
+    #print("Hello")
 
     sleep(2)
 
@@ -109,14 +109,100 @@ def lift_fork(direction):
     sleep(2)
 
 
+def barcode_scan():                                         # 0 - No color; 1 - Black; 6 - White         Pattern: Black White Black White   #can read correct color from 22 mm or closer
+    pattern = [1,6,1,6]
+    readings = [0,0,0,0]
+    
+    sound.speak("Loop Starting")
+
+    while (readings != pattern):
+        sound.speak("At the beginning")
+        sleep(0.5)
+        color = cs.color
+        if (color == 1):                                                    # change to match correct barcode index 1
+            readings[0] = color
+            sound.speak("Index 1 correct")
+            sound.speak(str(readings[0]))
+            while (readings[0] == pattern[0]):
+                sleep(0.5)
+                color = cs.color
+                if (color == 6):                                            # change to match correct barcode index 2
+                    readings[1] = color
+                    sound.speak("Index 2 correct")
+                    sound.speak(str(readings[1]))
+                    while (readings[1] == pattern[1]):
+                        sleep(0.5)
+                        color = cs.color
+                        if (color == 1):                                    # change to match correct barcode index 3
+                            readings[2] = color
+                            sound.speak("Index 3 correct")
+                            sound.speak(str(readings[2]))
+                            while (readings[2] == pattern[2]):
+                                sleep(0.5)
+                                color = cs.color
+                                if (color == 6):                            # change to match correct barcode index 4
+                                    readings[3] = color
+                                    sound.speak("Index 4 correct")
+                                    sound.speak(str(readings[3]))
+                                    sound.speak("This is the barcode in order")
+                                    sound.speak("Index 1")
+                                    sound.speak(str(readings[0]))
+                                    sound.speak("Index 2")
+                                    sound.speak(str(readings[1]))
+                                    sound.speak("Index 3")
+                                    sound.speak(str(readings[2]))
+                                    sound.speak("Index 4")
+                                    sound.speak(str(readings[3]))
+                                    sound.speak("Barcode Matched")
+                                    break
+
+
+                                else:
+                                    readings[0] = 0
+                                    readings[1] = 0
+                                    readings[2] = 0
+                                    readings[3] = 0
+                                    break
+
+                        elif (readings == pattern):
+                            break
+
+                        else:
+                            readings[0] = 0
+                            readings[1] = 0
+                            readings[2] = 0
+                            readings[3] = 0
+                            break
+
+                elif (readings == pattern):
+                    break
+
+                else:
+                    readings[0] = 0
+                    readings[1] = 0
+                    readings[2] = 0
+                    readings[3] = 0
+                    break
+
+    sound.speak("Completed")
+
+
+def test():
+    tank_pair.on_for_rotations(1,1,1)
+
+
+
 def main():
 
     #move_bot(24,"forward")
     #turn_bot("right")
     #move_bot(12,"reverse")
-    lift_fork("up")
+    #lift_fork("up")
     #sleep(60)
 
+    barcode_scan()
+
+    #test()
 
 if __name__ == "__main__":
     main()
